@@ -9,7 +9,7 @@ pipeline {
             steps {
                 
                 script{
-                    // Checkout the code from GitHub repository
+                  
                    gitCheckout(
                     branch: "main",
                     url: "https://github.com/reginbilnesar/java_devops_cicd.git"  
@@ -21,8 +21,15 @@ pipeline {
         }
         stage('Unit Test using maven') {
             steps {
-                dir('mrdevops_java_app-main') {  // Correct path to your project
+                dir('mrdevops_java_app-main') {  
                     mvnTest()
+                }
+            }
+        }
+        stage('integration Test using maven') {
+            steps {
+                dir('mrdevops_java_app-main') {  
+                    mvnintegration()
                 }
             }
         }
