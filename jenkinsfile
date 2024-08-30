@@ -10,10 +10,10 @@ pipeline {
                 
                 script{
                     // Checkout the code from GitHub repository
-                   gitCheckout(
-                    branch: "main",
-                    url: "https://github.com/reginbilnesar/java_devops_cicd.git"     
-                   )
+                   gitCheckout{
+                    branch: 'main'
+                    url: 'https://github.com/reginbilnesar/java_devops_cicd.git',      
+                   }
                 }
                 
             }
