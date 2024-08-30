@@ -20,16 +20,11 @@ pipeline {
             
         }
         stage('Unit Test using maven') {
-
             steps {
-                
-                script{
-                    
+                dir('/Desktop/devops/mrdevops_java_app-main') {  // Correct path to your project
                     mvnTest()
                 }
-                
             }
-
         }
     }
 }
