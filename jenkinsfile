@@ -1,0 +1,15 @@
+stages {
+
+    stage('Git Checkout') {
+
+        steps {
+            
+            script{
+
+                https://github.com/reginbilnesar/java_devops_cicd.git
+           
+            }
+            
+        }
+    }
+}
