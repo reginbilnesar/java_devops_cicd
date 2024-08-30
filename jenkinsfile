@@ -3,20 +3,15 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Git Checkout') {
-
+        stage('Checkout') {
             steps {
-                
-                script{
-                    // Checkout the code from GitHub repository
-                   gitCheckout(
-                    branch: 'main',
-                    url: 'https://github.com/reginbilnesar/java_devops_cicd.git'    
-                   )
+                script {
+                    call(branch: 'main', url: 'https://github.com/reginbilnesar/java_devops_cicd.git')
                 }
-                
             }
         }
+
+        // Additional stages...
     }
 }
+
