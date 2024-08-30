@@ -2,56 +2,45 @@
 pipeline {
     agent any 
 
-    parameters{
-        choice{name: 'action', choices: 'create\ndelete', description: 'Choose create/Destory'}
+    parameters {
+        choice(name: 'action', choices: ['create', 'delete'], description: 'Choose create/Delete')
     }
 
     stages {
-
-        when {expression{
-            param.action == 'create'
-        }}
         stage('Git Checkout') {
-
+            when { expression { params.action == 'create' } }
             steps {
-                
-                script{
-                  
-                   gitCheckout(
-                    branch: "main",
-                    url: "https://github.com/reginbilnesar/java_devops_cicd.git"  
-                   )
+                script {
+                    gitCheckout(
+                        branch: "main",
+                        url: "https://github.com/reginbilnesar/java_devops_cicd.git"
+                    )
                 }
-                
             }
-            
         }
-        stage('Unit Test using maven') {
-             when {expression{
-            param.action == 'create'
-        }}
+
+        stage('Unit Test using Maven') {
+            when { expression { params.action == 'create' } }
             steps {
-                dir('mrdevops_java_app-main') {  
+                dir('mrdevops_java_app-main') {
                     mvnTest()
                 }
             }
         }
-        stage('integration Test using maven') {
-             when {expression{
-            param.action == 'create'
-        }}
+
+        stage('Integration Test using Maven') {
+            when { expression { params.action == 'create' } }
             steps {
-                dir('mrdevops_java_app-main') {  
+                dir('mrdevops_java_app-main') {
                     mvnintegration()
                 }
             }
         }
-        stage('Quality Test using maven-sonar') {
-             when {expression{
-            param.action == 'create'
-        }}
+
+        stage('Quality Test using Maven-Sonar') {
+            when { expression { params.action == 'create' } }
             steps {
-                dir('mrdevops_java_app-main') {  
+                dir('mrdevops_java_app-main') {
                     staticcodeanalysis()
                 }
             }
