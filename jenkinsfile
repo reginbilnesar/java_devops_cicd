@@ -21,7 +21,7 @@ pipeline {
         }
         stage('Unit Test using maven') {
             steps {
-                dir('/Desktop/devops/mrdevops_java_app-main') {  // Correct path to your project
+                dir('mrdevops_java_app-main\pom.xml') {  // Correct path to your project
                     mvnTest()
                 }
             }
