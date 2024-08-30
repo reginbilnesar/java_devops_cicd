@@ -1,3 +1,4 @@
+@library('my-shared-library') _
 pipeline {
     agent any
 
@@ -9,7 +10,10 @@ pipeline {
                 
                 script{
                     // Checkout the code from GitHub repository
-                    git url: 'https://github.com/reginbilnesar/java_devops_cicd.git', branch: 'main'
+                   gitCheckout{
+                    branch: 'main'
+                    url: 'https://github.com/reginbilnesar/java_devops_cicd.git',      
+                   }
                 }
                 
             }
