@@ -1,9 +1,16 @@
 @Library('my-shared-library') _ 
 pipeline {
-    agent any
+    agent any 
+
+    parameters{
+        choice{name: 'action', choices: 'create\ndelete', description: 'Choose create/Destory'}
+    }
 
     stages {
 
+        when {expression{
+            param.action == 'create'
+        }}
         stage('Git Checkout') {
 
             steps {
@@ -20,6 +27,9 @@ pipeline {
             
         }
         stage('Unit Test using maven') {
+             when {expression{
+            param.action == 'create'
+        }}
             steps {
                 dir('mrdevops_java_app-main') {  
                     mvnTest()
@@ -27,9 +37,22 @@ pipeline {
             }
         }
         stage('integration Test using maven') {
+             when {expression{
+            param.action == 'create'
+        }}
             steps {
                 dir('mrdevops_java_app-main') {  
                     mvnintegration()
+                }
+            }
+        }
+        stage('Quality Test using maven-sonar') {
+             when {expression{
+            param.action == 'create'
+        }}
+            steps {
+                dir('mrdevops_java_app-main') {  
+                    staticcodeanalysis()
                 }
             }
         }
