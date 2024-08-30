@@ -1,15 +1,18 @@
-stages {
+pipeline {
+    agent any
 
-    stage('Git Checkout') {
+    stages {
 
-        steps {
-            
-            script{
+        stage('Git Checkout') {
 
-                https://github.com/reginbilnesar/java_devops_cicd.git
-           
+            steps {
+                
+                script{
+                    // Checkout the code from GitHub repository
+                    git url: 'https://github.com/reginbilnesar/java_devops_cicd.git', branch: 'main'
+                }
+                
             }
-            
         }
     }
 }
