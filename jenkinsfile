@@ -45,5 +45,32 @@ pipeline {
                 }
             }
         }
+
+        stage('Build & SonarQube Analysis') {
+            when { expression { params.action == 'create' } }
+            steps {
+                dir('mrdevops_java_app-main') {
+                    script {
+                        withSonarQubeEnv('My SonarQube Server') {
+                            sh 'mvn clean package sonar:sonar'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            when { expression { params.action == 'create' } }
+            steps {
+                script {
+                    timeout(time: 1, unit: 'HOURS') {
+                        def qg = waitForQualityGate()
+                        if (qg.status != 'OK') {
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        }
+                    }
+                }
+            }
+        }
     }
 }
