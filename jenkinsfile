@@ -1,76 +1,66 @@
-@Library('my-shared-library') _ 
-pipeline {
-    agent any 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.minikube.sample</groupId>
+    <artifactId>kubernetes-configmap-reload</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>minikube-sample</name>
+    <description>Demo project for Spring Cloud Kubernetes</description>
 
-    parameters {
-        choice(name: 'action', choices: ['create', 'delete'], description: 'Choose create/Delete')
-    }
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+    </properties>
 
-    stages {
-        stage('Git Checkout') {
-            when { expression { params.action == 'create' } }
-            steps {
-                script {
-                    gitCheckout(
-                        branch: "main",
-                        url: "https://github.com/reginbilnesar/java_devops_cicd.git"
-                    )
-                }
-            }
-        }
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-kubernetes-config</artifactId>
+            <version>1.1.0.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-        stage('Unit Test using Maven') {
-            when { expression { params.action == 'create' } }
-            steps {
-                dir('mrdevops_java_app-main') {
-                    mvnTest()
-                }
-            }
-        }
-
-        stage('Integration Test using Maven') {
-            when { expression { params.action == 'create' } }
-            steps {
-                dir('mrdevops_java_app-main') {
-                    mvnintegration()
-                }
-            }
-        }
-
-        stage('Quality Test using Maven-Sonar') {
-            when { expression { params.action == 'create' } }
-            steps {
-                dir('mrdevops_java_app-main') {
-                    staticcodeanalysis()
-                }
-            }
-        }
-
-        stage('Build & SonarQube Analysis') {
-            when { expression { params.action == 'create' } }
-            steps {
-                dir('mrdevops_java_app-main') {
-                    script {
-                        withSonarQubeEnv('My SonarQube Server') {
-                            sh 'mvn clean package sonar:sonar'
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Quality Gate') {
-            when { expression { params.action == 'create' } }
-            steps {
-                script {
-                    timeout(time: 1, unit: 'HOURS') {
-                        def qg = waitForQualityGate()
-                        if (qg.status != 'OK') {
-                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
